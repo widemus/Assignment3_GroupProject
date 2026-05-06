@@ -9,7 +9,7 @@ const ROLE_ROUTES = {
     '/events/create': ['organiser', 'admin'],
 };
 
-export function middleware(request) {
+export function proxy(request) {
     const { pathname } = request.nextUrl;
     const cookie = request.cookies.get(COOKIE_NAME);
 
