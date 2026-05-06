@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS bookings;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS users;
 
+
+-- USERS TABLE
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -20,6 +22,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- EVENTS TABLE
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
@@ -33,34 +36,51 @@ CREATE TABLE events (
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (organiser_id) REFERENCES users(id) ON DELETE CASCADE
+    
+    -- Foreign key: if organiser is deleted - delete their events
+    FOREIGN KEY (organiser_id) 
+        REFERENCES users(id) 
+        ON DELETE CASCADE
 );
 
+-- BOOKINGS TABLE
 CREATE TABLE bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     event_id INT NOT NULL,
     user_id INT NOT NULL,
     status ENUM('confirmed', 'cancelled', 'waitlisted') DEFAULT 'confirmed',
     booked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+
+    -- Foreign keys
+    FOREIGN KEY (event_id) 
+        REFERENCES events(id) 
+        ON DELETE CASCADE,
+    
+    FOREIGN KEY (user_id) 
+        REFERENCES users(id) 
+        ON DELETE CASCADE,
+
     UNIQUE KEY unique_booking (event_id, user_id)
 );
 
 -- SEED DATA
-
--- admin123
+-- INSERT USERS (predefined accounts)
 INSERT INTO users (username, email, password_hash, role) VALUES
+
+-- Admin account
 ('admin',      'admin@neuracortex.com',     '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
--- organiser1pass
+
+-- Organisers
 ('dr_vasquez', 'vasquez@neuracortex.com',   '$2a$10$xVBh4e7GF2qNFJ8yJmQXV.kQCGKlLxEBVjCbH0BFuTNLLQMDf9E9W', 'organiser'),
--- organiser2pass
+
 ('dr_chen',    'chen@neuracortex.com',      '$2a$10$3euPcmQFCiblsZeEu6Z7LuGzJpPYVlTJV7K9V0c5XuoaDyoF.oJfm', 'organiser'),
--- attendee1pass
+
+
+-- Attendees
 ('neuronaut1', 'user1@neuracortex.com',     '$2a$10$TwlbRGoH4v5lOxDa0Vu3lO5EHhiGKDREL82KRo.vwCimHr7PriGym', 'attendee'),
--- attendee2pass
+
 ('neuronaut2', 'user2@neuracortex.com',     '$2a$10$c5sSBerJoSQ5gLKfI2Oi4.mvJGHiN0VJI/M48cP6g1m5i9ZdJHc.a', 'attendee'),
--- attendee3pass
+
 ('neuronaut3', 'user3@neuracortex.com',     '$2a$10$YkFlFdFNi6LlVp7ZIi5DxetQzNPKFSg4d/hVZ9BJ5WNSSuJ9YhCaS', 'attendee');
 
 
@@ -68,7 +88,11 @@ INSERT INTO users (username, email, password_hash, role) VALUES
 --   vasquez@neuracortex.com / organiser1pass
 --   user1@neuracortex.com / attendee1pass
 
+
+-- INSERT EVENTS
 INSERT INTO events (title, description, event_type, date_time, duration_minutes, location, max_attendees, organiser_id, image_url) VALUES
+
+-- NEURASYNC DEPLOYMENT WEBINAR
 (
     'NEURASYNC™ V3.1 // Live Deployment Briefing',
     'Join our lead architects for a live walkthrough of the NeuraSYNC v3.1 cortical stack — covering latency benchmarks, substrate improvements, and enterprise integration pathways. Q&A included.',
@@ -80,6 +104,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     2,
     '/images/events/neurasync.jpg'
 ),
+
+--BIOMATA ARCHITECTURE SESSION
 (
     'Biomata Architecture — Cortical Mesh Overview',
     'A deep-dive technical session on the biomata layer: how biological neural tissue interfaces with silicon mesh substrates. Intended for engineers and researchers.',
@@ -91,6 +117,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     2,
     '/images/events/biomata.jpg'
 ),
+
+-- SINGAPORE LAB EXCURSION
 (
     'Lab Excursion // Facility Tour — Singapore Node',
     'An exclusive guided tour of our Singapore compute node. Observe live organoid cultures, substrate fabrication, and the cooling infrastructure that keeps our cortical arrays alive.',
@@ -102,6 +130,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     3,
     '/images/events/singapore.jpg'
 ),
+
+-- ETHICS PANEL WEBINAR
 (
     'Organoid Ethics Symposium // Panel Discussion',
     'A moderated discussion with bioethicists, engineers, and policy advisors on the ethical implications of organoid-based computing. Open to all stakeholders.',
@@ -113,6 +143,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     3,
     '/images/events/ethics.jpg'
 ),
+
+-- DUBLIN WORKSHOP 
 (
     'Substrate Fabrication Workshop — Dublin HQ',
     'Hands-on guided workshop in our Dublin facility. Learn how cortical substrates are grown, tested, and integrated into compute arrays. Limited spots available.',
@@ -124,6 +156,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     2,
     '/images/events/dublin.jpg'
 ),
+
+-- API DEVELOPER SESSION
 (
     'NeuraSYNC API — Developer Integration Session',
     'For developers integrating with the NeuraSYNC API. We cover authentication, rate limits, data format, and how to interpret cortical output streams in your applications.',
@@ -135,6 +169,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     3,
     '/images/events/api.jpg'
 ),
+
+-- TOKYO NODE MAINTENANCE VISIT
 (
     'Cortical Array Maintenance — Tokyo Node Visit',
     'A rare opportunity to visit our Tokyo compute node during scheduled maintenance. Observe real-time organoid health monitoring and substrate replacement procedures.',
@@ -146,6 +182,8 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     2,
     '/images/events/tokyo.jpg'
 ),
+
+-- QUARTERLY RESEARCH UPDATE
 (
     'Quarterly Research Update — Q2 2026',
     'NeuraCortex research leads present findings from Q2 2026: new cortical efficiency records, peer-review publications, and roadmap for H2 2026 deployments.',
@@ -158,18 +196,35 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     '/images/events/research.jpg'
 );
 
+-- INSERT BOOKINGS
 INSERT INTO bookings (event_id, user_id, status) VALUES
+
+-- Event 1 bookings
 (1, 4, 'confirmed'),
 (1, 5, 'confirmed'),
 (1, 6, 'confirmed'),
+
+-- Event 2 bookings
 (2, 4, 'confirmed'),
 (2, 6, 'waitlisted'),
+
+-- Event 3 bookings
 (3, 5, 'confirmed'),
+
+-- Event 4 bookings
 (4, 4, 'confirmed'),
 (4, 5, 'confirmed'),
+
+-- Event 5 bookings
 (5, 6, 'confirmed'),
+
+-- Event 6 bookings
 (6, 4, 'confirmed'),
 (6, 5, 'confirmed'),
+
+-- Event 7 bookings
 (7, 6, 'confirmed'),
+
+-- Event 8 bookings
 (8, 4, 'confirmed'),
 (8, 5, 'cancelled');
