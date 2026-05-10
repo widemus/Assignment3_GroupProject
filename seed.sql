@@ -105,7 +105,7 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     '/images/events/neurasync.jpg'
 ),
 
---BIOMATA ARCHITECTURE SESSION
+-- BIOMATA ARCHITECTURE SESSION
 (
     'Biomata Architecture — Cortical Mesh Overview',
     'A deep-dive technical session on the biomata layer: how biological neural tissue interfaces with silicon mesh substrates. Intended for engineers and researchers.',
