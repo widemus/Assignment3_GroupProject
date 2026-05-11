@@ -10,7 +10,7 @@ const ROLE_ROUTES = {
     '/events/create': ['organiser', 'admin'],
 };
 
-export function middleware (request) {
+export function proxy (request) {
 
     // Extract current URL path
     const { pathname } = request.nextUrl;

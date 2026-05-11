@@ -1,15 +1,16 @@
 -- NeuraCortex Database Schema & Seed Data
 
 CREATE DATABASE IF NOT EXISTS neuracortex;
-USE neuracortex;
 
+USE neuracortex;
 
 -- TABLES
 
 DROP TABLE IF EXISTS bookings;
-DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS users;
 
+DROP TABLE IF EXISTS events;
+
+DROP TABLE IF EXISTS users;
 
 -- USERS TABLE
 CREATE TABLE users (
@@ -17,7 +18,11 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'organiser', 'attendee') DEFAULT 'attendee',
+    role ENUM(
+        'admin',
+        'organiser',
+        'attendee'
+    ) DEFAULT 'attendee',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -36,9 +41,9 @@ CREATE TABLE events (
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    -- Foreign key: if organiser is deleted - delete their events
-    FOREIGN KEY (organiser_id) 
+
+-- Foreign key: if organiser is deleted - delete their events
+FOREIGN KEY (organiser_id) 
         REFERENCES users(id) 
         ON DELETE CASCADE
 );
@@ -51,8 +56,9 @@ CREATE TABLE bookings (
     status ENUM('confirmed', 'cancelled', 'waitlisted') DEFAULT 'confirmed',
     booked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    -- Foreign keys
-    FOREIGN KEY (event_id) 
+-- Foreign keys
+
+FOREIGN KEY (event_id) 
         REFERENCES events(id) 
         ON DELETE CASCADE,
     
@@ -65,37 +71,73 @@ CREATE TABLE bookings (
 
 -- SEED DATA
 -- INSERT USERS (predefined accounts)
-INSERT INTO users (username, email, password_hash, role) VALUES
+INSERT INTO users ( username, email, password_hash, role ) VALUES
 
 -- Admin account
-('admin',      'admin@neuracortex.com',     '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
+(
+    'admin',
+    'admin@neuracortex.com',
+    '$2b$10$Eh2bvWyxlEPhljGYMiHXDuKVQalaCLqUnO6IHrpTpmNyNzY4bLQsK',
+    'admin'
+),
 
 -- Organisers
-('dr_vasquez', 'vasquez@neuracortex.com',   '$2a$10$xVBh4e7GF2qNFJ8yJmQXV.kQCGKlLxEBVjCbH0BFuTNLLQMDf9E9W', 'organiser'),
-
-('dr_chen',    'chen@neuracortex.com',      '$2a$10$3euPcmQFCiblsZeEu6Z7LuGzJpPYVlTJV7K9V0c5XuoaDyoF.oJfm', 'organiser'),
-
+(
+    'dr_vasquez',
+    'vasquez@neuracortex.com',
+    '$2b$10$oLINS25DVME9phnHF2lgReb505Uz0XkV0qUpQbDmAqQDtLSPclM2y',
+    'organiser'
+),
+(
+    'dr_chen',
+    'chen@neuracortex.com',
+    '$2b$10$MaJFwqn4KNR2vAft0O09Ru8LdAdFWMAP7gWrOmjCxszTVpU26MHea',
+    'organiser'
+),
 
 -- Attendees
-('neuronaut1', 'user1@neuracortex.com',     '$2a$10$TwlbRGoH4v5lOxDa0Vu3lO5EHhiGKDREL82KRo.vwCimHr7PriGym', 'attendee'),
+(
+    'neuronaut1',
+    'user1@neuracortex.com',
+    '$2b$10$jbKw9j.2yHAb9XWfw0HdU.OvVpbDjSStP14jG5RtgJUX15NIcb3tG',
+    'attendee'
+),
+(
+    'neuronaut2',
+    'user2@neuracortex.com',
+    '$2b$10$H3W2jcKESiv4shej5LQwSuiVTrNWdTMGA4.HmsD06YnZj9Yw0lxJy',
+    'attendee'
+),
+(
+    'neuronaut3',
+    'user3@neuracortex.com',
+    '$2b$10$a3hCWMLZwuANb9P3Rw92pOEI/JvtuHAcfiGnPXvUBjBJ2vAyYx65q',
+    'attendee'
+);
 
-('neuronaut2', 'user2@neuracortex.com',     '$2a$10$c5sSBerJoSQ5gLKfI2Oi4.mvJGHiN0VJI/M48cP6g1m5i9ZdJHc.a', 'attendee'),
-
-('neuronaut3', 'user3@neuracortex.com',     '$2a$10$YkFlFdFNi6LlVp7ZIi5DxetQzNPKFSg4d/hVZ9BJ5WNSSuJ9YhCaS', 'attendee');
-
-
---   admin@neuracortex.com / admin123
---   vasquez@neuracortex.com / organiser1pass
---   user1@neuracortex.com / attendee1pass
-
+--  admin@neuracortex.com / admin123
+--  vasquez@neuracortex.com / organiser1pass
+--  user1@neuracortex.com / attendee1pass
 
 -- INSERT EVENTS
-INSERT INTO events (title, description, event_type, date_time, duration_minutes, location, max_attendees, organiser_id, image_url) VALUES
+INSERT INTO
+    events (
+        title,
+        description,
+        event_type,
+        date_time,
+        duration_minutes,
+        location,
+        max_attendees,
+        organiser_id,
+        image_url
+    )
+VALUES
 
 -- NEURASYNC DEPLOYMENT WEBINAR
 (
     'NEURASYNC™ V3.1 // Live Deployment Briefing',
-    'Join our lead architects for a live walkthrough of the NeuraSYNC v3.1 cortical stack — covering latency benchmarks, substrate improvements, and enterprise integration pathways. Q&A included.',
+    'Join our lead architects for a live walkthrough of the NeuraSYNC™ v3.1 cortical stack — covering latency benchmarks, substrate improvements, and enterprise integration pathways. Q&A included.',
     'webinar',
     DATE_ADD(NOW(), INTERVAL 7 DAY),
     90,
@@ -144,7 +186,7 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
     '/images/events/ethics.jpg'
 ),
 
--- DUBLIN WORKSHOP 
+-- DUBLIN WORKSHOP
 (
     'Substrate Fabrication Workshop — Dublin HQ',
     'Hands-on guided workshop in our Dublin facility. Learn how cortical substrates are grown, tested, and integrated into compute arrays. Limited spots available.',
@@ -200,31 +242,25 @@ INSERT INTO events (title, description, event_type, date_time, duration_minutes,
 INSERT INTO bookings (event_id, user_id, status) VALUES
 
 -- Event 1 bookings
-(1, 4, 'confirmed'),
-(1, 5, 'confirmed'),
-(1, 6, 'confirmed'),
+(1, 4, 'confirmed'), (1, 5, 'confirmed'), (1, 6, 'confirmed'),
 
 -- Event 2 bookings
-(2, 4, 'confirmed'),
-(2, 6, 'waitlisted'),
+(2, 4, 'confirmed'), (2, 6, 'waitlisted'),
 
 -- Event 3 bookings
 (3, 5, 'confirmed'),
 
 -- Event 4 bookings
-(4, 4, 'confirmed'),
-(4, 5, 'confirmed'),
+(4, 4, 'confirmed'), (4, 5, 'confirmed'),
 
 -- Event 5 bookings
 (5, 6, 'confirmed'),
 
 -- Event 6 bookings
-(6, 4, 'confirmed'),
-(6, 5, 'confirmed'),
+(6, 4, 'confirmed'), (6, 5, 'confirmed'),
 
 -- Event 7 bookings
 (7, 6, 'confirmed'),
 
 -- Event 8 bookings
-(8, 4, 'confirmed'),
-(8, 5, 'cancelled');
+(8, 4, 'confirmed'), (8, 5, 'cancelled');
