@@ -20,7 +20,7 @@ export async function GET(request, { params }) {
              JOIN users u ON e.organiser_id = u.id
              LEFT JOIN bookings b ON b.event_id = e.id AND b.status = 'confirmed'
              WHERE e.id = ?
-             GROUP BY e.id`,
+             GROUP BY e.id, u.username`,
             [id]
         );
 
