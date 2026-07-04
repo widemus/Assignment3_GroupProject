@@ -37,8 +37,8 @@ export async function GET(request) {
         }
 
         // Group and sort
-        query += ' GROUP BY e.id ORDER BY e.date_time ASC';
-
+        query += ' GROUP BY e.id, u.username ORDER BY e.date_time ASC';
+        
         // Execute query
         const [rows] = await pool.query(query, params);
 
